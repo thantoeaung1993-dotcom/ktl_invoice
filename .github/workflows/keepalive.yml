@@ -1,0 +1,19 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    # ၃ ရက်တစ်ခါ (ဥပမာ - ရက်တစ်ရက်နဲ့ လေးရက်နေ့တွေမှာ) လုပ်ပါ
+    # (ဒါမှ ၇ ရက်ပြည့်ခါနီးမှာ သေချာပေါက် လှုပ်ရှားမှုရှိမှာပါ)
+    - cron: '0 0 */3 * *' 
+  workflow_dispatch: # ကိုယ်တိုင် Run လုပ်ချင်ရင် သုံးပါ
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        run: |
+          # Table ကို Query လုပ်ပြီး Database ကို လှုပ်ရှားစေပါ
+          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive?select=*&limit=1" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
